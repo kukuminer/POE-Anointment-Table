@@ -3,10 +3,23 @@ body
     background-image: url("res/blight-bg.jpg");
     margin: 3% 8%;
     font-family: monospace;
+    color: white;
+    position: relative;
+    min-height: 100vh;
 }
 #debug
 {
     color: white;
+}
+#header
+{
+    color: white;
+    /* width: 80%; */
+    border: 2px solid white;
+    background-color: #0F0F0F;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 10px;
 }
 .passivesRow
 {
@@ -17,8 +30,8 @@ table
     background-color: #0F0F0F;
     border: 2px solid white;
     width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10%;
+    margin-right: 10%;
     padding: 10px;
     border-collapse: collapse;
 }
@@ -38,7 +51,7 @@ img
 }
 #main
 {
-
+    padding-bottom: 1rem;
 }
 .oil
 {
@@ -48,4 +61,13 @@ img
 button
 {
     font-size: 20px;
+}
+#footer
+{
+    position: absolute;
+    bottom: 0;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 1rem;
 }
