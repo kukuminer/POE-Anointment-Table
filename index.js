@@ -2,8 +2,8 @@ var oilArr = ["Clear", "Sepia", "Amber", "Verdant", "Teal", "Azure", "Violet", "
 
 window.onload = function()
 {
-    var debug = document.getElementById("debug");
-    debug.innerHTML = "debug works";
+    // var debug = document.getElementById("debug");
+    // debug.innerHTML = "debug works";
 
     var u = "up";
     var d = "down";
@@ -44,7 +44,7 @@ window.onload = function()
     {
         (function(a)
         {
-            debug.innerHTML += " " + a + " ";
+            // debug.innerHTML += " " + a + " ";
             $("up"+a).addEventListener("click", function() {
                 return increase(a);
             });
@@ -55,7 +55,7 @@ window.onload = function()
     }
 
     loadPassives();
-    debug.innerHTML += " debug bottom works";
+    // debug.innerHTML += " debug bottom works";
 }
 
 function increase(oil)
