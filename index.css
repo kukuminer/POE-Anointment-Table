@@ -8,6 +8,10 @@ body
 {
     color: white;
 }
+.passivesRow
+{
+    border: 2px solid white;
+}
 table
 {
     background-color: #0F0F0F;
@@ -16,11 +20,21 @@ table
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
+    border-collapse: collapse;
 }
 td
 {
     color: white;
     text-align: center;
+}
+#passives img
+{
+    height: 40px;
+    width: 40px;
+}
+img
+{
+    margin: 5px;
 }
 #main
 {

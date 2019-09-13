@@ -149,13 +149,19 @@ function updatePassives()
             row.appendChild(nameCell);
 
             var desc = document.createElement("p");
-            desc.innerHTML = "" + passives[a].effect;
+            // desc.innerHTML = "" + passives[a].effect;
+            for(var g = 0; g < passives[a].effect.length; g++)
+            {
+                desc.innerHTML += "" + passives[a].effect[g];
+                desc.appendChild(document.createElement("br"));
+            }
             var descCell = document.createElement("td");
             descCell.appendChild(desc);
             row.appendChild(descCell);
 
 
 
+            row.className = "passivesRow";
             $("passives").appendChild(row);
             // alert(passives[a].name + " is available");
         }
