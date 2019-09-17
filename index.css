@@ -5,7 +5,7 @@ body
     font-family: monospace;
     color: white;
     position: relative;
-    min-height: 100vh;
+    min-height: 85vh;
 }
 #debug
 {
@@ -14,11 +14,12 @@ body
 #header
 {
     color: white;
-    /* width: 80%; */
+    width: 80%;
+    margin: auto;
     border: 2px solid white;
     background-color: #0F0F0F;
-    margin-left: 10%;
-    margin-right: 10%;
+    /* margin-left: 10%;
+    margin-right: 10%; */
     padding: 10px;
 }
 .passivesRow
@@ -30,8 +31,9 @@ table
     background-color: #0F0F0F;
     border: 2px solid white;
     width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin: auto;
+    /* margin-left: 10%;
+    margin-right: 10%; */
     padding: 10px;
     border-collapse: collapse;
 }
@@ -39,6 +41,7 @@ td
 {
     color: white;
     text-align: center;
+    padding: 5px;
 }
 #passives img
 {
@@ -55,7 +58,7 @@ img
 }
 .oil
 {
-    width: 20px;
+    width: 40px;
     font-size: 20px;
 }
 button
