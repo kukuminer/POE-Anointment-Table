@@ -154,6 +154,9 @@ function updatePassives()
     console.log("updating passives");
     clearPassives();
     var oils = getOils();
+	// var tbl = $("passives");
+
+
 
     var req = [0,0,0,0,0,0,0,0,0,0,0,0];
 
@@ -166,6 +169,8 @@ function updatePassives()
     for(var a = 0; a < passives.length; a++)
     {
         var available = true;
+
+
         // alert("got here");
         for(var b = 0; b < 12; b++) //Ensure we have enough oil for it
         {
@@ -194,13 +199,32 @@ function getOils()
 
 function clearPassives()
 {
-    var tbl = $("passives");
-    var searchString = $("searchBar").value;
+	var oils = getOils();
+	var tbl = $("passives");
+	for(var c = 0; c < tbl.childElementCount; c++)
+	{
+		var req = [0,0,0,0,0,0,0,0,0,0,0,0];
+		for(var b = 0; b < 3; b++) //3 oils per passive required
+		{
+			console.log("c is " + c + " " + $("passives").childNodes[c].childElementCount + " and b is " + b);
+			req[oilArr.indexOf(tbl.childNodes[c].childNodes[b].innerHTML)]++;
+		}
+		for(var d = 0; d < 12; d++)
+		{
+			if(oils[d] < req[d])
+			{
+				tbl.removeChild(tbl.childNodes[d]);
+			}
+		}
+	}
 
-    while(tbl.firstChild)
-    {
-        tbl.removeChild(tbl.firstChild);
-    }
+    // var tbl = $("passives");
+    // var searchString = $("searchBar").value;
+	//
+    // while(tbl.firstChild)
+    // {
+    //     tbl.removeChild(tbl.firstChild);
+    // }
 }
 
 function searchPassives()
