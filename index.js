@@ -155,6 +155,14 @@ function updatePassives()
     clearPassives();
     var oils = getOils();
 
+    var req = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+    for(var b = 0; b < 3; b++) //3 oils per passive required
+    {
+        req[oilArr.indexOf(tabSplit[b].trim())]++;
+    }
+
+
     for(var a = 0; a < passives.length; a++)
     {
         var available = true;
