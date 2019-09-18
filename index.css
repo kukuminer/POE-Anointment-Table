@@ -41,12 +41,16 @@ td
 {
     color: white;
     text-align: center;
-    padding: 5px;
+    /* padding: 5px; */
 }
 #passives img
 {
     height: 40px;
     width: 40px;
+}
+#passives p
+{
+    font-size: 16px;
 }
 img
 {

@@ -25,6 +25,7 @@ window.onload = function()
         inp.className = "oil";
         inp.id = "amt" + a;
         inp.type = "number";
+        inp.value = "0";
         cell.appendChild(p);
         cell.appendChild(inp);
         $("row2").appendChild(cell);
@@ -105,7 +106,7 @@ function addPassive(a)
         {
             oilPics[index].src = "res/" + d + oilArr[d] + ".png";
             oilPics[index].alt = "" + oilArr[d] + " Oil";
-            oilVals[index].innerHTML = "" + oilArr[d] + " Oil";
+            oilVals[index].innerHTML = "" + oilArr[d];
             index++;
         }
     }
@@ -152,19 +153,11 @@ function addPassive(a)
 function updatePassives()
 {
     console.log("updating passives");
+
     clearPassives();
+
     var oils = getOils();
 	// var tbl = $("passives");
-
-
-
-    var req = [0,0,0,0,0,0,0,0,0,0,0,0];
-
-    for(var b = 0; b < 3; b++) //3 oils per passive required
-    {
-        req[oilArr.indexOf(tabSplit[b].trim())]++;
-    }
-
 
     for(var a = 0; a < passives.length; a++)
     {
@@ -201,21 +194,24 @@ function clearPassives()
 {
 	var oils = getOils();
 	var tbl = $("passives");
+    console.log("passives has " + tbl.childElementCount + " children");
 	for(var c = 0; c < tbl.childElementCount; c++)
 	{
+        console.log("c is " + c + " and there are " + tbl.childNodes[c].childElementCount);
 		var req = [0,0,0,0,0,0,0,0,0,0,0,0];
+
 		for(var b = 0; b < 3; b++) //3 oils per passive required
 		{
-			console.log("c is " + c + " " + $("passives").childNodes[c].childElementCount + " and b is " + b);
-			req[oilArr.indexOf(tbl.childNodes[c].childNodes[b].innerHTML)]++;
+            console.log(tbl.childNodes[c].firstChild);
+			req[oilArr.indexOf(tbl.childNodes[c].childNodes[b].childNodes[1].innerHTML)]++;
 		}
-		for(var d = 0; d < 12; d++)
-		{
-			if(oils[d] < req[d])
-			{
-				tbl.removeChild(tbl.childNodes[d]);
-			}
-		}
+		// for(var d = 0; d < 12; d++)
+		// {
+		// 	if(oils[d] < req[d])
+		// 	{
+		// 		tbl.removeChild(tbl.childNodes[d]);
+		// 	}
+		// }
 	}
 
     // var tbl = $("passives");
