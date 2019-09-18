@@ -1,19 +1,13 @@
 var oilArr = ["Clear", "Sepia", "Amber", "Verdant", "Teal", "Azure", "Violet", "Crimson", "Black", "Opalescent", "Silver", "Golden"]
-var displayedPassives = [];
+var displayedPassiveReqs = [];
+var displayedPassiveNames = [];
 
 window.onload = function()
 {
-    // var debug = document.getElementById("debug");
-    // debug.innerHTML = "debug works";
-
-    var u = "up";
-    var d = "down";
-
     for(var a = 0; a < 12; a++) //Add table row contents
     {
         var cell = document.createElement("td");
         var pic = document.createElement("img");
-        //if(a < 2){alert("setting src to res/" + a + oilArr[a] + ".png");}
         pic.src = "res/" + a + oilArr[a] + ".png";
         pic.alt = "" + oilArr[a] + " Oil";
         cell.appendChild(pic);
@@ -31,60 +25,21 @@ window.onload = function()
         cell.appendChild(inp);
         $("row2").appendChild(cell);
 
-        // var cell = document.createElement("td");
-        // var buttonUp = document.createElement("button");
-        // var buttonDown = document.createElement("button");
-        // buttonUp.innerHTML = "↑";
-        // buttonUp.id = "up" + a;
-        // buttonDown.innerHTML = "↓";
-        // buttonDown.id = "down" + a;
-        // cell.appendChild(buttonUp);
-        // cell.appendChild(buttonDown);
-        // $("row3").appendChild(cell);
     }
 
     for(var a = 0; a < 12; a++)
     {
         (function(a)
         {
-            // debug.innerHTML += " " + a + " ";
-            // $("up"+a).addEventListener("click", function() {
-            //     return increase(a);
-            // });
-            // $("down"+a).addEventListener("click", function() {
-            //     return decrease(a);
-            // });
             $("amt"+a).observe("input", updatePassives);
         }(a));
     }
 
     $("searchBar").observe("input", searchPassives);
+    $("clearButton").observe("click", clearOils);
     loadPassives();
-    // debug.innerHTML += " debug bottom works";
 }
 
-// function increase(oil)
-// {
-//     // alert("oil called with " + oil);
-//     var field = $("amt" + oil);
-//     var a = field.value;
-//     a++;
-//     field.value = a;
-//     updatePassives();
-//     // alert("completed function");
-// }
-//
-// function decrease(oil)
-// {
-//     var field = $("amt" + oil);
-//     var a = field.value;
-//     if(a > 0)
-//     {
-//         a--;
-//     }
-//     field.value = a;
-//     updatePassives();
-// }
 
 function addPassive(a)
 {
@@ -131,7 +86,6 @@ function addPassive(a)
     var nameCell = document.createElement("td");
     nameCell.appendChild(passiveName);
     row.appendChild(nameCell);
-	displayedPassives.push("" + passives[a].name);
 
     var desc = document.createElement("p");
     // desc.innerHTML = "" + passives[a].effect;
@@ -145,6 +99,8 @@ function addPassive(a)
     row.appendChild(descCell);
 
 
+    displayedPassiveReqs.push(passives[a].req);
+    displayedPassiveNames.push(passives[a].name);
 
     row.className = "passivesRow";
     $("passives").appendChild(row);
@@ -178,7 +134,7 @@ function updatePassives()
                 break;
             }
         }
-        if(available && !displayedPassives.includes(""+passives[a].name))
+        if(available && !displayedPassiveNames.includes(passives[a].name))
         {
 			addPassive(a);
         }
@@ -203,17 +159,19 @@ function clearPassives()
     // console.log("passives has " + tbl.childElementCount + " children");
 	for(var c = 0; c < tbl.length; c++)
 	{
-		var req = [0,0,0,0,0,0,0,0,0,0,0,0];
-		for(var b = 0; b < 3; b++) //3 oils per passive required
-		{
-            // console.log(tbl.childNodes[c].firstChild);
-			req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
-		}
+		var req = displayedPassiveReqs[c];
+		// for(var b = 0; b < 3; b++) //3 oils per passive required
+		// {
+        //     // console.log(tbl.childNodes[c].firstChild);
+		// 	req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
+		// }
 		for(var d = 0; d < 12; d++)
 		{
 			if(oils[d] < req[d])
 			{
 				$("passives").removeChild(tbl[c]);
+                displayedPassiveNames.splice(c, 1);
+                displayedPassiveReqs.splice(c, 1);
 			}
 		}
 		// console.log("there are " + tbl.length + " length");
@@ -233,4 +191,13 @@ function searchPassives()
             tbl.removeChild(tbl.childNodes[a]);
         }
     }
+}
+
+function clearOils()
+{
+    for(var a = 0; a < 12; a++)
+    {
+        $("amt"+a).value = 0;
+    }
+    clearPassives();
 }
