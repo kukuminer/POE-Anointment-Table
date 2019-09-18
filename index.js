@@ -118,12 +118,12 @@ function addPassive(a)
         row.appendChild(oilCells[f]);
     }
 
-    var passivePic = document.createElement("img");
-    passivePic.src = "res/passives/" + passives[a].name + ".png";
-    passivePic.alt = passives[a].name;
-    var picCell = document.createElement("td");
-    picCell.appendChild(passivePic);
-    row.appendChild(picCell);
+    // var passivePic = document.createElement("img");
+    // passivePic.src = "res/passives/" + passives[a].name + ".png";
+    // passivePic.alt = passives[a].name;
+    // var picCell = document.createElement("td");
+    // picCell.appendChild(passivePic);
+    // row.appendChild(picCell);
 
     var passiveName = document.createElement("h1");
     passiveName.innerHTML = "" + passives[a].name;
@@ -152,18 +152,23 @@ function addPassive(a)
 
 function updatePassives()
 {
-    console.log("updating passives");
+    // console.log("updating passives");
 
     clearPassives();
 
     var oils = getOils();
-	// var tbl = $("passives");
-
+	var tbl = $("passives");
+	var includedList = [];
+	var included = false;
+	// for(var b = 0; b < tbl.length; b++)
+	// {
+	// 	includedList.push(tbl[b].childNodes[3].innerHTML);
+	// }
+	// console.log(included);
     for(var a = 0; a < passives.length; a++)
     {
         var available = true;
-
-
+		var isIncluded = false;
         // alert("got here");
         for(var b = 0; b < 12; b++) //Ensure we have enough oil for it
         {
@@ -175,7 +180,21 @@ function updatePassives()
         }
         if(available)
         {
-            addPassive(a);
+			console.log("looping " + tbl.childElementCount + " times");
+			for(var c = 0; c < tbl.childElementCount; c++)
+			{
+				console.log(tbl.childNodes[c].childNodes[3].childNodes[0].innerHTML);
+				if(passives[a].name == tbl.childNodes[c].childNodes[3].childNodes[0].innerHTML)
+				{
+					console.log("this is included!");
+					included = true;
+					break
+				}
+			}
+			if(!included)
+			{
+				addPassive(a);
+			}
         }
     }
 }
@@ -193,34 +212,26 @@ function getOils()
 function clearPassives()
 {
 	var oils = getOils();
-	var tbl = $("passives");
-    console.log("passives has " + tbl.childElementCount + " children");
-	for(var c = 0; c < tbl.childElementCount; c++)
+	// var tbl = $("passives");
+	var tbl = document.getElementsByClassName("passivesRow");
+    // console.log("passives has " + tbl.childElementCount + " children");
+	for(var c = 0; c < tbl.length; c++)
 	{
-        console.log("c is " + c + " and there are " + tbl.childNodes[c].childElementCount);
 		var req = [0,0,0,0,0,0,0,0,0,0,0,0];
-
 		for(var b = 0; b < 3; b++) //3 oils per passive required
 		{
-            console.log(tbl.childNodes[c].firstChild);
-			req[oilArr.indexOf(tbl.childNodes[c].childNodes[b].childNodes[1].innerHTML)]++;
+            // console.log(tbl.childNodes[c].firstChild);
+			req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
 		}
-		// for(var d = 0; d < 12; d++)
-		// {
-		// 	if(oils[d] < req[d])
-		// 	{
-		// 		tbl.removeChild(tbl.childNodes[d]);
-		// 	}
-		// }
+		for(var d = 0; d < 12; d++)
+		{
+			if(oils[d] < req[d])
+			{
+				$("passives").removeChild(tbl[c]);
+			}
+		}
+		// console.log("there are " + tbl.length + " length");
 	}
-
-    // var tbl = $("passives");
-    // var searchString = $("searchBar").value;
-	//
-    // while(tbl.firstChild)
-    // {
-    //     tbl.removeChild(tbl.firstChild);
-    // }
 }
 
 function searchPassives()
@@ -230,8 +241,8 @@ function searchPassives()
     var searchString = $("searchBar").value.toLowerCase();
     for(var a = 0; a < tbl.childElementCount; a++)
     {
-        if(!tbl.childNodes[a].childNodes[4].innerHTML.toLowerCase().includes(searchString)
-    && !tbl.childNodes[a].childNodes[5].innerHTML.toLowerCase().includes(searchString))
+        if(!tbl.childNodes[a].childNodes[3].innerHTML.toLowerCase().includes(searchString)
+    && !tbl.childNodes[a].childNodes[4].innerHTML.toLowerCase().includes(searchString))
         {
             tbl.removeChild(tbl.childNodes[a]);
         }

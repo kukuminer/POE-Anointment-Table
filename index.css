@@ -50,6 +50,7 @@ td
 }
 #passives p
 {
+	height: auto;
     font-size: 16px;
 }
 img
