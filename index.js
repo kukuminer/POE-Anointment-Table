@@ -1,4 +1,5 @@
 var oilArr = ["Clear", "Sepia", "Amber", "Verdant", "Teal", "Azure", "Violet", "Crimson", "Black", "Opalescent", "Silver", "Golden"]
+var displayedPassives = [];
 
 window.onload = function()
 {
@@ -130,6 +131,7 @@ function addPassive(a)
     var nameCell = document.createElement("td");
     nameCell.appendChild(passiveName);
     row.appendChild(nameCell);
+	displayedPassives.push("" + passives[a].name);
 
     var desc = document.createElement("p");
     // desc.innerHTML = "" + passives[a].effect;
@@ -158,8 +160,6 @@ function updatePassives()
 
     var oils = getOils();
 	var tbl = $("passives");
-	var includedList = [];
-	var included = false;
 	// for(var b = 0; b < tbl.length; b++)
 	// {
 	// 	includedList.push(tbl[b].childNodes[3].innerHTML);
@@ -178,23 +178,9 @@ function updatePassives()
                 break;
             }
         }
-        if(available)
+        if(available && !displayedPassives.includes(""+passives[a].name))
         {
-			console.log("looping " + tbl.childElementCount + " times");
-			for(var c = 0; c < tbl.childElementCount; c++)
-			{
-				console.log(tbl.childNodes[c].childNodes[3].childNodes[0].innerHTML);
-				if(passives[a].name == tbl.childNodes[c].childNodes[3].childNodes[0].innerHTML)
-				{
-					console.log("this is included!");
-					included = true;
-					break
-				}
-			}
-			if(!included)
-			{
-				addPassive(a);
-			}
+			addPassive(a);
         }
     }
 }
