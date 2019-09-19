@@ -38,6 +38,7 @@ window.onload = function()
     $("searchBar").observe("input", updatePassives);
     $("clearButton").observe("click", clearOils);
     loadPassives();
+	updatePassives();
 }
 
 
