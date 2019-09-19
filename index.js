@@ -35,7 +35,7 @@ window.onload = function()
         }(a));
     }
 
-    $("searchBar").observe("input", searchPassives);
+    $("searchBar").observe("input", updatePassives);
     $("clearButton").observe("click", clearOils);
     loadPassives();
 }
@@ -103,6 +103,7 @@ function addPassive(a)
     displayedPassiveNames.push(passives[a].name);
 
     row.className = "passivesRow";
+    row.id = passives[a].name;
     $("passives").appendChild(row);
     // alert(passives[a].name + " is available");
 
@@ -112,31 +113,93 @@ function updatePassives()
 {
     // console.log("updating passives");
 
-    clearPassives();
-
     var oils = getOils();
-	var tbl = $("passives");
-	// for(var b = 0; b < tbl.length; b++)
-	// {
-	// 	includedList.push(tbl[b].childNodes[3].innerHTML);
-	// }
-	// console.log(included);
+    var tbl = $("passives");
+    var searchedText = $("searchBar").value;
+
     for(var a = 0; a < passives.length; a++)
     {
-        var available = true;
-		var isIncluded = false;
-        // alert("got here");
-        for(var b = 0; b < 12; b++) //Ensure we have enough oil for it
+        var affordable = true;
+        var hasSearchedText = false;
+        if(oils != [0,0,0,0,0,0,0,0,0,0,0,0])
         {
-            if(oils[b] < passives[a].req[b])
+            for(var b = 0; b < 12; b++)
             {
-                available = false;
-                break;
+                if(oils[b] < passives[a].req[b])
+                {
+                    affordable = false;
+                    break;
+                }
             }
         }
-        if(available && !displayedPassiveNames.includes(passives[a].name))
+        if(affordable)
         {
-			addPassive(a);
+            if(passives[a].name.includes(searchedText) ||
+            passives[a].effect.includes(searchedText))
+            {
+                hasSearchedText = true;
+            }
+        }
+        if(affordable && hasSearchedText && !passives[a].onDisplay)
+        {
+            passives[a].shouldBeDisplayed = true;
+        }
+        else {
+            passives[a].shouldBeDisplayed = false;
+        }
+
+        /*Update Table*/
+
+        if(passives[a].shouldBeDisplayed == true && passives[a].onDisplay == false)
+        {
+            addPassive(a);
+            passives[a].onDisplay = true;
+        }
+        else if(passives[a].shouldBeDisplayed == false && passives[a].onDisplay == true){
+            removePassive(a);
+            passives[a].onDisplay = false;
+        }
+    }
+    // clearPassives();
+    //
+    // var oils = getOils();
+	// var tbl = $("passives");
+	// // for(var b = 0; b < tbl.length; b++)
+	// // {
+	// // 	includedList.push(tbl[b].childNodes[3].innerHTML);
+	// // }
+	// // console.log(included);
+    // for(var a = 0; a < passives.length; a++)
+    // {
+    //     var available = true;
+	// 	var isIncluded = false;
+    //     // alert("got here");
+    //     for(var b = 0; b < 12; b++) //Ensure we have enough oil for it
+    //     {
+    //         if(oils[b] < passives[a].req[b])
+    //         {
+    //             available = false;
+    //             break;
+    //         }
+    //     }
+    //     if(available && !displayedPassiveNames.includes(passives[a].name))
+    //     {
+	// 		addPassive(a);
+    //     }
+    // }
+}
+
+function removePassive(a)
+{
+    var nameToRemove = passives[a].name;
+    var tbl = $("passives");
+    for(var a = 0; a < tbl.childElementCount; a++)
+    {
+        console.log(tbl.childNodes[a+1].id == nameToRemove);
+        if(tbl.childNodes[a+1].id == nameToRemove)
+        {
+            console.log("removing child " + (a+1));
+            tbl.removeChild[a+1];
         }
     }
 }
@@ -151,47 +214,47 @@ function getOils()
     return oils;
 }
 
-function clearPassives()
-{
-	var oils = getOils();
-	// var tbl = $("passives");
-	var tbl = document.getElementsByClassName("passivesRow");
-    // console.log("passives has " + tbl.childElementCount + " children");
-	for(var c = 0; c < tbl.length; c++)
-	{
-		var req = displayedPassiveReqs[c];
-		// for(var b = 0; b < 3; b++) //3 oils per passive required
-		// {
-        //     // console.log(tbl.childNodes[c].firstChild);
-		// 	req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
-		// }
-		for(var d = 0; d < 12; d++)
-		{
-			if(oils[d] < req[d])
-			{
-				$("passives").removeChild(tbl[c]);
-                displayedPassiveNames.splice(c, 1);
-                displayedPassiveReqs.splice(c, 1);
-			}
-		}
-		// console.log("there are " + tbl.length + " length");
-	}
-}
+// function clearPassives()
+// {
+// 	var oils = getOils();
+// 	// var tbl = $("passives");
+// 	var tbl = document.getElementsByClassName("passivesRow");
+//     // console.log("passives has " + tbl.childElementCount + " children");
+// 	for(var c = 0; c < tbl.length; c++)
+// 	{
+// 		var req = displayedPassiveReqs[c];
+// 		// for(var b = 0; b < 3; b++) //3 oils per passive required
+// 		// {
+//         //     // console.log(tbl.childNodes[c].firstChild);
+// 		// 	req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
+// 		// }
+// 		for(var d = 0; d < 12; d++)
+// 		{
+// 			if(oils[d] < req[d])
+// 			{
+// 				$("passives").removeChild(tbl[c]);
+//                 displayedPassiveNames.splice(c, 1);
+//                 displayedPassiveReqs.splice(c, 1);
+// 			}
+// 		}
+// 		// console.log("there are " + tbl.length + " length");
+// 	}
+// }
 
-function searchPassives()
-{
-    //console.log("searching");
-    var tbl = $("passives");
-    var searchString = $("searchBar").value.toLowerCase();
-    for(var a = 0; a < tbl.childElementCount; a++)
-    {
-        if(!tbl.childNodes[a].childNodes[3].innerHTML.toLowerCase().includes(searchString)
-    && !tbl.childNodes[a].childNodes[4].innerHTML.toLowerCase().includes(searchString))
-        {
-            tbl.removeChild(tbl.childNodes[a]);
-        }
-    }
-}
+// function searchPassives()
+// {
+//     //console.log("searching");
+//     var tbl = $("passives");
+//     var searchString = $("searchBar").value.toLowerCase();
+//     for(var a = 0; a < tbl.childElementCount; a++)
+//     {
+//         if(!tbl.childNodes[a].childNodes[3].innerHTML.toLowerCase().includes(searchString)
+//     && !tbl.childNodes[a].childNodes[4].innerHTML.toLowerCase().includes(searchString))
+//         {
+//             tbl.removeChild(tbl.childNodes[a]);
+//         }
+//     }
+// }
 
 function clearOils()
 {
