@@ -35,7 +35,7 @@ window.onload = function()
         }(a));
     }
 
-    $("searchBar").observe("input", searchPassives);
+    $("searchBar").observe("input", updatePassives);
     $("clearButton").observe("click", clearOils);
     loadPassives();
 }
@@ -103,6 +103,7 @@ function addPassive(a)
     displayedPassiveNames.push(passives[a].name);
 
     row.className = "passivesRow";
+    row.id = passives[a].name;
     $("passives").appendChild(row);
     // alert(passives[a].name + " is available");
 
@@ -112,86 +113,97 @@ function updatePassives()
 {
     // console.log("updating passives");
 
-    clearPassives();
-
     var oils = getOils();
-	var tbl = $("passives");
-	// for(var b = 0; b < tbl.length; b++)
-	// {
-	// 	includedList.push(tbl[b].childNodes[3].innerHTML);
-	// }
-	// console.log(included);
+    var tbl = $("passives");
+    var searchedText = $("searchBar").value.toLowerCase();
+	// console.log(oils);
+
     for(var a = 0; a < passives.length; a++)
     {
-        var available = true;
-		var isIncluded = false;
-        // alert("got here");
-        for(var b = 0; b < 12; b++) //Ensure we have enough oil for it
+        var affordable = true;
+        var hasSearchedText = false;
+		// console.log(oils == 0);
+        if(oils != 0)
         {
-            if(oils[b] < passives[a].req[b])
+            for(var b = 0; b < 12; b++)
             {
-                available = false;
-                break;
+                if(oils[b] < passives[a].req[b])
+                {
+                    affordable = false;
+                    break;
+                }
             }
         }
-        if(available && !displayedPassiveNames.includes(passives[a].name))
+        if(affordable && searchedText != "")
         {
-			addPassive(a);
+			var n = "" + passives[a].name;
+			var e = "" + passives[a].effect;
+            if(n.toLowerCase().includes(searchedText) ||
+            e.toLowerCase().includes(searchedText))
+            {
+                hasSearchedText = true;
+            }
+        } else {
+        	hasSearchedText = true;
+        }
+        if(affordable && hasSearchedText)
+        {
+            passives[a].shouldBeDisplayed = true;
+			// console.log(passives[a].shouldBeDisplayed);
+        }
+        else {
+            passives[a].shouldBeDisplayed = false;
+        }
+
+        /*Update Table*/
+
+        if(passives[a].shouldBeDisplayed == true && passives[a].onDisplay == false)
+        {
+            addPassive(a);
+            passives[a].onDisplay = true;
+        }
+        else if(passives[a].shouldBeDisplayed == false && passives[a].onDisplay == true){
+            removePassive(a);
+            passives[a].onDisplay = false;
+        }
+    }
+}
+
+function removePassive(a)
+{
+    var nameToRemove = passives[a].name;
+    var tbl = $("passives");
+	// console.log(tbl.childElementCount);
+    for(var a = 0; a <= tbl.childElementCount; a++)
+    {
+        // console.log(tbl.childNodes[a].id);
+        if(tbl.childNodes[a].id == nameToRemove)
+        {
+            // console.log("removing child " + (a));
+            tbl.removeChild(tbl.childNodes[a]);
         }
     }
 }
 
 function getOils()
 {
+	var osum = 0;
     var oils = [];
     for(var a = 0; a < 12; a++)
     {
         oils[a] = $("amt"+a).value;
+		if(oils[a] == 0)
+		{
+			osum++;
+		}
     }
+	if(osum >= 12)
+	{
+		return 0;
+	}
     return oils;
 }
 
-function clearPassives()
-{
-	var oils = getOils();
-	// var tbl = $("passives");
-	var tbl = document.getElementsByClassName("passivesRow");
-    // console.log("passives has " + tbl.childElementCount + " children");
-	for(var c = 0; c < tbl.length; c++)
-	{
-		var req = displayedPassiveReqs[c];
-		// for(var b = 0; b < 3; b++) //3 oils per passive required
-		// {
-        //     // console.log(tbl.childNodes[c].firstChild);
-		// 	req[oilArr.indexOf(tbl[c].childNodes[b].childNodes[1].innerHTML)]++;
-		// }
-		for(var d = 0; d < 12; d++)
-		{
-			if(oils[d] < req[d])
-			{
-				$("passives").removeChild(tbl[c]);
-                displayedPassiveNames.splice(c, 1);
-                displayedPassiveReqs.splice(c, 1);
-			}
-		}
-		// console.log("there are " + tbl.length + " length");
-	}
-}
-
-function searchPassives()
-{
-    //console.log("searching");
-    var tbl = $("passives");
-    var searchString = $("searchBar").value.toLowerCase();
-    for(var a = 0; a < tbl.childElementCount; a++)
-    {
-        if(!tbl.childNodes[a].childNodes[3].innerHTML.toLowerCase().includes(searchString)
-    && !tbl.childNodes[a].childNodes[4].innerHTML.toLowerCase().includes(searchString))
-        {
-            tbl.removeChild(tbl.childNodes[a]);
-        }
-    }
-}
 
 function clearOils()
 {
@@ -199,5 +211,6 @@ function clearOils()
     {
         $("amt"+a).value = 0;
     }
-    clearPassives();
+	$("searchBar").value = "";
+    updatePassives();
 }

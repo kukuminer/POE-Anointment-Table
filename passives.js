@@ -1191,7 +1191,9 @@ Golden 	Golden 	Golden 	Soul of Steel	30% increased Armour
         passives.push({
             req: req,
             name: name,
-            effect: effects
+            effect: effects,
+            onDisplay: false,
+            shouldBeDisplayed: false
         });
     }
 
